@@ -6,8 +6,21 @@ app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
 POSTS = [
-    {"id": 1, "title": "First post", "content": "This is the first post."},
-    {"id": 2, "title": "Second post", "content": "This is the second post."},
+    {"id": 1, "title": "Zebra post", "content": "This is a wild animal."},
+    {"id": 2, "title": "Apple pie", "content": "This is about baking."},
+    {"id": 3, "title": "Coding life", "content": "This is a post about Python."},
+    {"id": 4, "title": "Mountain echo", "content": "This is a nature post."},
+    {"id": 5, "title": "Yellow sun", "content": "This is a sunny post."},
+    {"id": 6, "title": "Banana world", "content": "This is a fruit post."},
+    {"id": 7, "title": "Digital storm", "content": "This is about technology."},
+    {"id": 8, "title": "Happy hour", "content": "This is a fun time post."},
+    {"id": 9, "title": "Zen garden", "content": "This is a relaxing post."},
+    {"id": 10, "title": "Early bird", "content": "This is a morning post."},
+    {"id": 11, "title": "Lazy dog", "content": "This is a chill post."},
+    {"id": 12, "title": "Violet flame", "content": "This is a mystical post."},
+    {"id": 13, "title": "Jungle book", "content": "This is a classic tale."},
+    {"id": 14, "title": "Quiet forest", "content": "This is about trees."},
+    {"id": 15, "title": "Rocket launch", "content": "This is space-related."},
 ]
 
 
@@ -25,7 +38,19 @@ def get_posts():
 
         return jsonify(new_post), 201
     else:
-        return jsonify(POSTS)
+        # GET request
+        sort_criteria, direction = helpers.get_parameters_for_sorting()
+
+        if not sort_criteria and not direction:
+            return jsonify(POSTS), 200
+        else:
+            sorted_list = sorted(
+                POSTS,
+                key=lambda post: post[sort_criteria],
+                reverse=(direction == 'desc')
+            )
+
+            return jsonify(sorted_list), 200
 
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE', 'PUT'])

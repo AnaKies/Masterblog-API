@@ -49,3 +49,19 @@ def find_post_by_id(post_id, posts):
         if post['id'] == post_id:
             return post
     raise Exception(f'No post with id {post_id} found.')
+
+
+def get_parameters_for_sorting():
+    try:
+        sort_criteria = request.args.get('sort')
+        direction = request.args.get('direction')
+    except Exception as error:
+        raise Exception(f'Invalid JSON. {error}')
+
+    if sort_criteria and sort_criteria not in ['title', 'content']:
+        raise Exception('The value of the key "sort" should be "title" or "content"')
+
+    if direction and direction not in ['asc', 'desc']:
+        raise Exception('The value of the key "direction" should be "asc" or "desc"')
+
+    return sort_criteria, direction
