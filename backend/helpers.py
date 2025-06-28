@@ -22,15 +22,15 @@ def get_post():
         # Get the new post from the client
         new_post = request.get_json()
     except Exception as error:
-        return jsonify({'Error': str(error)}), 400
+        raise Exception(f'Invalid JSON. {error}')
 
     if not new_post:
-        return jsonify({'Error': 'Empty post body.'}), 400
+        raise Exception('Empty post body.')
 
     if 'title' not in new_post:
-        return jsonify({'Error': 'Missing title'}), 400
+        raise Exception('Missing title')
 
     if 'content' not in new_post:
-        return jsonify({'Error': 'Missing content'}), 400
+        raise Exception('Missing content')
 
     return new_post

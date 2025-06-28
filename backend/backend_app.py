@@ -14,7 +14,11 @@ POSTS = [
 @app.route('/api/posts', methods=['GET', 'POST'])
 def get_posts():
     if request.method == 'POST':
-        new_post = helpers.get_post()
+        try:
+            new_post = helpers.get_post()
+        except Exception as error:
+            return jsonify({'Error': str(error)}), 404
+
         new_id = helpers.generate_id(POSTS)
         new_post['id'] = new_id
         POSTS.append(new_post)
