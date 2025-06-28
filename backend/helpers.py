@@ -18,6 +18,10 @@ def generate_id(posts):
 
 
 def get_post():
+    """
+    Gets the post from the body of the client's POST request.
+    Checks that the request is valid.
+    """
     try:
         # Get the new post from the client
         new_post = request.get_json()
@@ -34,3 +38,14 @@ def get_post():
         raise Exception('Missing content')
 
     return new_post
+
+
+def find_post_by_id(post_id, posts):
+    """
+    Finds the post with the given id.
+    If there is no post with this id, return None.
+    """
+    for post in posts:
+        if post['id'] == post_id:
+            return post
+    raise Exception(f'No post with id {post_id} found.')
