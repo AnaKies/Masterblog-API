@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import helpers
+import api_requests
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -27,73 +27,30 @@ POSTS = [
 @app.route('/api/posts', methods=['GET', 'POST'])
 def get_posts():
     if request.method == 'POST':
-        try:
-            new_post = helpers.get_post_to_add()
-        except Exception as error:
-            return jsonify({'Error': str(error)}), 404
-
-        new_id = helpers.generate_id(POSTS)
-        new_post['id'] = new_id
-        POSTS.append(new_post)
-
-        return jsonify(new_post), 201
+        response = api_requests.do_post_request_to_add(POSTS)
     else:
         # GET request
-        sort_criteria, direction = helpers.get_parameters_for_sorting()
+        response = api_requests.do_get_request_to_show_or_sort(POSTS)
 
-        if not sort_criteria and not direction:
-            return jsonify(POSTS), 200
-        else:
-            sorted_list = sorted(
-                POSTS,
-                key=lambda post: post[sort_criteria],
-                reverse=(direction == 'desc')
-            )
-
-            return jsonify(sorted_list), 200
+    return response
 
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE', 'PUT'])
 def handle_post(post_id):
-    try:
-        post_to_handle = helpers.find_post_by_id(post_id, POSTS)
-    except Exception as error:
-        return jsonify({'Error': str(error)}), 404
-
     if request.method == 'DELETE':
-        POSTS.remove(post_to_handle)
-
-        return jsonify({'message': f'Post with id {post_id} has been deleted successfully.'})
+        response = api_requests.do_delete_request(POSTS, post_id)
     else:
         # Update post (PUT)
-        try:
-            new_post_data = request.get_json()
-        except Exception as error:
-            return jsonify({'Error': str(error)}), 404
-        post_to_handle.update(new_post_data)
-        return jsonify(post_to_handle), 200
+        response = api_requests.do_update_request()
+
+    return response
 
 
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
-    try:
-        title = request.args.get('title')
-        content = request.args.get('content')
-    except Exception as error:
-        return jsonify({'Error': str(error)}), 404
+    response = api_requests.do_get_request_to_search()
 
-    match_posts = []
-
-    for post in POSTS:
-        if title and title.lower() in post['title'].lower():
-            match_posts.append(post)
-            continue # to avoid a matching post is added twice
-
-        if content and content.lower() in post['content'].lower():
-            match_posts.append(post)
-
-    return jsonify(match_posts), 200
-
+    return response
 
 
 if __name__ == '__main__':
