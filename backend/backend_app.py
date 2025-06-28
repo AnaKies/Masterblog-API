@@ -49,5 +49,27 @@ def handle_post(post_id):
         return jsonify(post_to_handle), 200
 
 
+@app.route('/api/posts/search', methods=['GET'])
+def search_posts():
+    try:
+        title = request.args.get('title')
+        content = request.args.get('content')
+    except Exception as error:
+        return jsonify({'Error': str(error)}), 404
+
+    match_posts = []
+
+    for post in POSTS:
+        if title and title.lower() in post['title'].lower():
+            match_posts.append(post)
+            continue # to avoid a matching post is added twice
+
+        if content and content.lower() in post['content'].lower():
+            match_posts.append(post)
+
+    return jsonify(match_posts), 200
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
