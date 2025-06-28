@@ -1,5 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+import helpers
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -10,9 +11,18 @@ POSTS = [
 ]
 
 
-@app.route('/api/posts', methods=['GET'])
+@app.route('/api/posts', methods=['GET', 'POST'])
 def get_posts():
-    return jsonify(POSTS)
+    if request.method == 'POST':
+        new_post = helpers.get_post()
+        new_id = helpers.generate_id(POSTS)
+        new_post['id'] = new_id
+        POSTS.append(new_post)
+
+        return jsonify(new_post), 201
+    else:
+        return jsonify(POSTS)
+
 
 
 if __name__ == '__main__':
