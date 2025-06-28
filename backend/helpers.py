@@ -17,7 +17,7 @@ def generate_id(posts):
     return generated_id
 
 
-def get_post():
+def get_post_to_add():
     """
     Gets the post from the body of the client's POST request.
     Checks that the request is valid.

@@ -15,7 +15,7 @@ POSTS = [
 def get_posts():
     if request.method == 'POST':
         try:
-            new_post = helpers.get_post()
+            new_post = helpers.get_post_to_add()
         except Exception as error:
             return jsonify({'Error': str(error)}), 404
 
@@ -28,16 +28,25 @@ def get_posts():
         return jsonify(POSTS)
 
 
-@app.route('/api/posts/<int:post_id>', methods=['DELETE'])
-def delete_post(post_id):
+@app.route('/api/posts/<int:post_id>', methods=['DELETE', 'PUT'])
+def handle_post(post_id):
     try:
-        post_to_delete = helpers.find_post_by_id(post_id, POSTS)
+        post_to_handle = helpers.find_post_by_id(post_id, POSTS)
     except Exception as error:
         return jsonify({'Error': str(error)}), 404
 
-    POSTS.remove(post_to_delete)
+    if request.method == 'DELETE':
+        POSTS.remove(post_to_handle)
 
-    return jsonify({'message': f'Post with id {post_id} has been deleted successfully.'})
+        return jsonify({'message': f'Post with id {post_id} has been deleted successfully.'})
+    else:
+        # Update post (PUT)
+        try:
+            new_post_data = request.get_json()
+        except Exception as error:
+            return jsonify({'Error': str(error)}), 404
+        post_to_handle.update(new_post_data)
+        return jsonify(post_to_handle), 200
 
 
 if __name__ == '__main__':
