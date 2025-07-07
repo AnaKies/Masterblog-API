@@ -5,16 +5,21 @@ def generate_id(posts):
     """
     Searches for a maximal ID in the list of posts and
     generates a new one by incrementing the maximal ID.
+    If the post list is empty, the ID is 1.
     """
     max_id = 0
 
-    for post in posts:
-        if post['id'] > max_id:
-            max_id = post['id']
+    try:
+        for post in posts:
+            if post['id'] > max_id:
+                max_id = post['id']
 
-    generated_id = max_id + 1
+        generated_id = max_id + 1
 
-    return generated_id
+        return generated_id
+
+    except Exception as error:
+        raise Exception(f'Error generating ID: {error}')
 
 
 def get_post_to_add():
@@ -45,10 +50,13 @@ def find_post_by_id(post_id, posts):
     Finds the post with the given id.
     If there is no post with this id, return None.
     """
-    for post in posts:
-        if post['id'] == post_id:
-            return post
-    raise Exception(f'No post with id {post_id} found.')
+    try:
+        for post in posts:
+            if post['id'] == post_id:
+                return post
+        raise Exception(f'No post with id {post_id} found.')
+    except Exception as error:
+        raise Exception(f'Error finding post with id {post_id}: {error}')
 
 
 def get_parameters_for_sorting():

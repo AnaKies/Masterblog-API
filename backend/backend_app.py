@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_cors import CORS
 import api_requests
 
 app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
+# the CORS allows the browser the cross-domain communication (front-end and back-end)
+CORS(app)
 
 POSTS = [
     {"id": 1, "title": "Zebra post", "content": "This is a wild animal."},
@@ -25,7 +26,7 @@ POSTS = [
 
 
 @app.route('/api/posts', methods=['GET', 'POST'])
-def get_posts():
+def get_sort_add_posts():
     if request.method == 'POST':
         response = api_requests.do_post_request_to_add(POSTS)
     else:
@@ -36,12 +37,12 @@ def get_posts():
 
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE', 'PUT'])
-def handle_post(post_id):
+def delete_update_posts(post_id):
     if request.method == 'DELETE':
         response = api_requests.do_delete_request(POSTS, post_id)
     else:
         # Update post (PUT)
-        response = api_requests.do_update_request()
+        response = api_requests.do_update_request(POSTS, post_id)
 
     return response
 

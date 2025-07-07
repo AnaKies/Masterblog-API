@@ -5,14 +5,14 @@ import helpers
 def do_post_request_to_add(posts):
     try:
         new_post = helpers.get_post_to_add()
+        new_id = helpers.generate_id(posts)
+        new_post['id'] = new_id
+        posts.append(new_post)
+
+        return jsonify(new_post), 201
+
     except Exception as error:
-        return jsonify({'Error': str(error)}), 404
-
-    new_id = helpers.generate_id(posts)
-    new_post['id'] = new_id
-    posts.append(new_post)
-
-    return jsonify(new_post), 201
+        return jsonify({'Error adding new post': str(error)}), 400
 
 
 def do_get_request_to_show_or_sort(posts):
@@ -34,11 +34,12 @@ def do_get_request_to_show_or_sort(posts):
 def do_delete_request(posts, post_id):
     try:
         post_to_handle = helpers.find_post_by_id(post_id, posts)
-    except Exception as error:
-        return jsonify({'Error': str(error)}), 404
+        posts.remove(post_to_handle)
 
-    posts.remove(post_to_handle)
-    return jsonify({'message': f'Post with id {post_id} has been deleted successfully.'})
+        return jsonify({'message': f'Post with id {post_id} has been deleted successfully.'}), 200
+
+    except Exception as error:
+        return jsonify({'Error deleting the post': str(error)}), 404
 
 
 def do_update_request(posts, post_id):
