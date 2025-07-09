@@ -49,7 +49,7 @@ def delete_update_posts(post_id):
 
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
-    response = api_requests.do_get_request_to_search()
+    response = api_requests.do_get_request_to_search(POSTS)
 
     return response
 

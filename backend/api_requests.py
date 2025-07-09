@@ -46,8 +46,13 @@ def do_get_request_to_show_or_sort(posts):
 def do_delete_request(posts, post_id):
     try:
         post_to_handle = helpers.find_post_by_id(post_id, posts)
+
+        if not post_to_handle:
+            return jsonify(f'No post with id {post_id} found.'), 404
+
     except Exception as error:
-        return jsonify({'Error finding post': str(error)}), 404
+        # 500 -> internal server error
+        return jsonify({'Error finding post': str(error)}), 500
 
     try:
         posts.remove(post_to_handle)
@@ -62,8 +67,13 @@ def do_delete_request(posts, post_id):
 def do_update_request(posts, post_id):
     try:
         post_to_handle = helpers.find_post_by_id(post_id, posts)
+
+        if not post_to_handle:
+            return jsonify(f'No post with id {post_id} found.'), 404
+
     except Exception as error:
-        return jsonify({'Error finding post': str(error)}), 404
+        # 500 -> internal server error
+        return jsonify({'Error finding post': str(error)}), 500
 
     try:
         new_post_data = request.get_json()

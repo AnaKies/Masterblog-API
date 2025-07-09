@@ -48,13 +48,12 @@ def get_post_to_add():
 def find_post_by_id(post_id, posts):
     """
     Finds the post with the given id.
-    If there is no post with this id, return None.
     """
     try:
         for post in posts:
             if post['id'] == post_id:
                 return post
-        raise Exception(f'No post with id {post_id} found.')
+        return None
     except Exception as error:
         raise Exception(f'Error finding post with id {post_id}: {error}')
 
