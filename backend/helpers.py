@@ -1,11 +1,11 @@
-from flask import request, jsonify
+from flask import request
 
 
 def generate_id(posts):
     """
     Searches for a maximal ID in the list of posts and
     generates a new one by incrementing the maximal ID.
-    If the post list is empty, the ID is 1.
+    If the post-list is empty, the ID is 1.
     """
     max_id = 0
 

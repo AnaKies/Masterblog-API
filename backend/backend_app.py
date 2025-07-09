@@ -27,6 +27,14 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET', 'POST'])
 def get_sort_add_posts():
+    """
+    Shows the list of posts.
+    If sorting query parameters are given, shows the sorted list.
+    Query parameters: sort (title or content), direction (desc or asc).
+    Adds new posts to the list.
+    New data are JSON formatted and are received in the body of the POST request
+    (keys 'title' and 'content').
+    """
     if request.method == 'POST':
         response = api_requests.do_post_request_to_add(POSTS)
     else:
@@ -38,6 +46,9 @@ def get_sort_add_posts():
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE', 'PUT'])
 def delete_update_posts(post_id):
+    """
+    Deletes a post from the list.
+    """
     if request.method == 'DELETE':
         response = api_requests.do_delete_request(POSTS, post_id)
     else:
@@ -49,6 +60,10 @@ def delete_update_posts(post_id):
 
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
+    """
+    Searches for posts using query parameters content and title.
+    If nothing is found, the empty list is returned.
+    """
     response = api_requests.do_get_request_to_search(POSTS)
 
     return response

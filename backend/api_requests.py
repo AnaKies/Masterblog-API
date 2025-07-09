@@ -3,6 +3,9 @@ import helpers
 
 
 def do_post_request_to_add(posts):
+    """
+    Performs POST request to add a new post to the list.
+    """
     try:
         new_post = helpers.get_post_to_add()
         new_id = helpers.generate_id(posts)
@@ -44,6 +47,9 @@ def do_get_request_to_show_or_sort(posts):
 
 
 def do_delete_request(posts, post_id):
+    """
+    Performs DELETE request to delete a post by a post-ID.
+    """
     try:
         post_to_handle = helpers.find_post_by_id(post_id, posts)
 
@@ -65,6 +71,9 @@ def do_delete_request(posts, post_id):
 
 
 def do_update_request(posts, post_id):
+    """
+    Performs UPDATE request to update a post by a post-ID.
+    """
     try:
         post_to_handle = helpers.find_post_by_id(post_id, posts)
 
@@ -87,6 +96,9 @@ def do_update_request(posts, post_id):
 
 
 def do_get_request_to_search(posts):
+    """
+    Performs GET request to search for a post by a post-ID.
+    """
     try:
         title = request.args.get('title')
         content = request.args.get('content')
