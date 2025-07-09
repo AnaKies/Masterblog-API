@@ -61,10 +61,16 @@ def find_post_by_id(post_id, posts):
 
 def get_parameters_for_sorting():
     try:
+        # check if user keys exist and one of them is wrong
+        for key in request.args:
+            if key not in ['sort', 'direction']:
+                raise Exception(f'Wrong key argument: {key}')
+
         sort_criteria = request.args.get('sort')
         direction = request.args.get('direction')
+
     except Exception as error:
-        raise Exception(f'Invalid JSON. {error}')
+        raise Exception(f'Error getting query parameters: {error}')
 
     if sort_criteria and sort_criteria not in ['title', 'content']:
         raise Exception('The value of the key "sort" should be "title" or "content"')
